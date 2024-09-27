@@ -57,7 +57,7 @@ jobs:
     - name: Setup Anbox Cloud
       uses: canonical/anbox-cloud-github-action@main
       with:
-        channel: ${{ steps.config.outputs.base_version }}/edge
+        channel: 1.23/stable
 
     - name: Tune installation
       run: |
