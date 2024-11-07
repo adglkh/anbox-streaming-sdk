@@ -2,6 +2,13 @@ name: Build and run tests for a PR
 
 on:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -22,6 +29,11 @@ jobs:
       id: get-version
       run: |
         echo "version=$(./scripts/gen-version.sh)" >> $GITHUB_OUTPUT
+
+    - name: Setup tmate session
+      timeout-minutes: 360
+      uses: mxschmitt/action-tmate@v3
+      if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
     - name: Build
       run: |
